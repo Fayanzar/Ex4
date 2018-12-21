@@ -189,7 +189,11 @@ public:
     // Returns true if the vector's s components are all smaller that the ones of the vector it is compared against.
     inline bool operator > ( const vector3Dim<Scalar>& vec ) const; 
     // Returns true if the vector's s components are all smaller or equal that the ones of the vector it is compared against.
-    inline bool operator >= ( const vector3Dim<Scalar>& vec ) const; 
+    inline bool operator >= ( const vector3Dim<Scalar>& vec ) const;
+	inline bool operator == (const vector3Dim<Scalar>& vec) const;
+
+	inline bool operator!=(const vector3Dim<Scalar>& vec) const;
+
 
 	// Return the maximal component value.
     inline Scalar maxComponent(void) const; 
@@ -1221,6 +1225,20 @@ inline bool vector3Dim<Scalar>::operator >= ( const vector3Dim<Scalar>& vec ) co
     if( x >= vec.x && y >= vec.y && z >= vec.z )
         return true;
     return false;
+}
+
+template<class Scalar>
+inline bool vector3Dim<Scalar>::operator == (const vector3Dim<Scalar>& vec) const {
+	if (x == vec.x && y == vec.y && z == vec.z)
+		return true;
+	return false;
+}
+
+template<class Scalar>
+inline bool vector3Dim<Scalar>::operator != (const vector3Dim<Scalar>& vec) const {
+	if (x != vec.x || y != vec.y || z != vec.z)
+		return true;
+	return false;
 }
 
 //--------------------------------------------------------------------------------

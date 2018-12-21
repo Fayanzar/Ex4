@@ -8,6 +8,7 @@
 #include <iostream>
 #include "util/vectorbase.h"
 #include "DrawingUtilitiesClass.h"
+#include "util/timer.h"
 
 struct Point2D {
 	int x,y;
@@ -20,6 +21,8 @@ class Simulator{
 public:
 	// Attributes
 	int m_iTestCase;
+	bool showWhite;
+	bool showRed;
 	DrawingUtilitiesClass * DUC;
 	// Functions
 	
@@ -69,6 +72,12 @@ public:
 	input x,y: the mouse position in pixels
 	*/
 	virtual void onMouse(int x, int y) = 0;
+
+	virtual int changeNumber(int n) = 0;
+
+	virtual void changeMass(float m) = 0;
+
+	virtual int changeRadius(float r) = 0;
 
 };
 

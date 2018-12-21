@@ -1,0 +1,12 @@
+n = 100
+r = 0.05
+naïve: 68
+accelerated: 23
+n = 1000
+r = 0.02
+naïve: 6479
+accelerated: 281
+n = 10000
+r = 0.005
+naïve: 630672
+accelerated: 2987

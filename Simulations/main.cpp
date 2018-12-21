@@ -1,4 +1,4 @@
-#include <sstream>
+﻿#include <sstream>
 #include <iomanip>
 #include <random>
 #define _USE_MATH_DEFINES
@@ -41,10 +41,18 @@ using namespace GamePhysics;
 DrawingUtilitiesClass * g_pDUC;
 Simulator * g_pSimulator;
 float 	g_fTimestep = 0.001;
+int g_iNumber = 100;
+int g_iPreNumber = 100;
+float g_iMass = 1;
+float g_iPreMass = 1;
+float g_iRadius = 0.05;
+float g_iPreRadius = 0.05;
 #ifdef ADAPTIVESTEP
 float   g_fTimeFactor = 1;
 #endif
 bool  g_bDraw = true;
+bool g_bDrawNaive = true;
+bool g_bDrawGrid = true;
 int g_iTestCase = 0;
 int g_iPreTestCase = -1;
 bool  g_bSimulateByStep = false;
@@ -65,6 +73,11 @@ void initTweakBar(){
 	TwAddVarRW(g_pDUC->g_pTweakBar, "RunStep", TW_TYPE_BOOLCPP, &g_bSimulateByStep, "");
 	TwAddVarRW(g_pDUC->g_pTweakBar, "Draw Simulation",  TW_TYPE_BOOLCPP, &g_bDraw, "");
 	TwAddVarRW(g_pDUC->g_pTweakBar, "Timestep", TW_TYPE_FLOAT, &g_fTimestep, "step=0.0001 min=0.0001");
+	TwAddVarRW(g_pDUC->g_pTweakBar, "Number", TW_TYPE_INT16, &g_iNumber, "");
+	TwAddVarRW(g_pDUC->g_pTweakBar, "Radius", TW_TYPE_FLOAT, &g_iRadius, "step=0.001 min=0.001");
+	TwAddVarRW(g_pDUC->g_pTweakBar, "Mass", TW_TYPE_FLOAT, &g_iMass, "step=0.001 min=0.01");
+	TwAddVarRW(g_pDUC->g_pTweakBar, "Show naïve", TW_TYPE_BOOLCPP, &g_bDrawNaive, "");
+	TwAddVarRW(g_pDUC->g_pTweakBar, "Show grid simulation", TW_TYPE_BOOLCPP, &g_bDrawGrid, "");
 #ifdef ADAPTIVESTEP
 	TwAddVarRW(g_pDUC->g_pTweakBar, "Time Factor", TW_TYPE_FLOAT, &g_fTimeFactor, "step=0.01   min=0.01");
 #endif
@@ -249,6 +262,19 @@ void CALLBACK OnFrameMove( double dTime, float fElapsedTime, void* pUserContext 
 		g_pSimulator->notifyCaseChanged(g_iTestCase);
 		g_pSimulator->initUI(g_pDUC);
 		g_iPreTestCase = g_iTestCase;
+	}
+	if (g_iPreMass != g_iMass) {
+		g_iPreMass = g_iMass;
+		g_pSimulator->changeMass(g_iMass);
+	}
+	g_pSimulator->showWhite = g_bDrawNaive;
+	g_pSimulator->showRed = g_bDrawGrid;
+	if (g_iPreNumber != g_iNumber) {
+		g_iPreNumber = g_iNumber = g_pSimulator->changeNumber(g_iNumber);
+	}
+	if (g_iPreRadius != g_iRadius) {
+		g_iPreNumber = g_iNumber = g_pSimulator->changeRadius(g_iRadius);
+		g_iPreRadius = g_iRadius = g_iRadius <= 0.25 ? g_iRadius : 0.25;
 	}
 	if(!g_bSimulateByStep){
 #ifdef ADAPTIVESTEP
