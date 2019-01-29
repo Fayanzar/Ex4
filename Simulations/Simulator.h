@@ -23,6 +23,7 @@ public:
 	int m_iTestCase;
 	bool showWhite;
 	bool showRed;
+	int m_iKernelSpring;
 	DrawingUtilitiesClass * DUC;
 	// Functions
 	
@@ -60,6 +61,8 @@ public:
 	**for more info on how to use this function take a look at the template simulator 
 	*/
 	virtual void notifyCaseChanged(int testCase) = 0;
+
+	virtual void addRandomSystem() = 0;
 
 	/*
 	this function is used to receive the input from the mouse

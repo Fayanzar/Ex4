@@ -54,6 +54,7 @@ bool  g_bDraw = true;
 bool g_bDrawNaive = true;
 bool g_bDrawGrid = true;
 int g_iTestCase = 0;
+int g_iKernel = 1;
 int g_iPreTestCase = -1;
 bool  g_bSimulateByStep = false;
 bool firstTime = true;
@@ -65,19 +66,20 @@ void initTweakBar(){
 	g_pDUC->g_pTweakBar = TwNewBar("TweakBar");
 	TwDefine(" TweakBar color='0 128 128' alpha=128 ");
 	TwType TW_TYPE_TESTCASE = TwDefineEnumFromString("Test Scene", g_pSimulator->getTestCasesStr());
+	TwType TW_TYPE_KERNEL = TwDefineEnumFromString("Kernel", "1,2,3,4,5");
 	TwAddVarRW(g_pDUC->g_pTweakBar, "Test Scene", TW_TYPE_TESTCASE, &g_iTestCase, "");
+	TwAddVarRW(g_pDUC->g_pTweakBar, "Kernel", TW_TYPE_KERNEL, &g_iKernel, "");
 	// HINT: For buttons you can directly pass the callback function as a lambda expression.
-	TwAddButton(g_pDUC->g_pTweakBar, "Reset Scene", [](void * s){ g_iPreTestCase = -1; }, nullptr, "");
+	TwAddButton(g_pDUC->g_pTweakBar, "Reset Scene", [](void * s) { g_iPreTestCase = -1; }, nullptr, "");
+	TwAddButton(g_pDUC->g_pTweakBar, "Add random system", [](void * s) { g_pSimulator->addRandomSystem(); }, nullptr, "");
 	TwAddButton(g_pDUC->g_pTweakBar, "Reset Camera", [](void * s){g_pDUC->g_camera.Reset();}, nullptr,"");
 	// Run mode, step by step, control by space key
 	TwAddVarRW(g_pDUC->g_pTweakBar, "RunStep", TW_TYPE_BOOLCPP, &g_bSimulateByStep, "");
 	TwAddVarRW(g_pDUC->g_pTweakBar, "Draw Simulation",  TW_TYPE_BOOLCPP, &g_bDraw, "");
 	TwAddVarRW(g_pDUC->g_pTweakBar, "Timestep", TW_TYPE_FLOAT, &g_fTimestep, "step=0.0001 min=0.0001");
 	TwAddVarRW(g_pDUC->g_pTweakBar, "Number", TW_TYPE_INT16, &g_iNumber, "");
-	TwAddVarRW(g_pDUC->g_pTweakBar, "Radius", TW_TYPE_FLOAT, &g_iRadius, "step=0.001 min=0.001");
-	TwAddVarRW(g_pDUC->g_pTweakBar, "Mass", TW_TYPE_FLOAT, &g_iMass, "step=0.001 min=0.01");
-	TwAddVarRW(g_pDUC->g_pTweakBar, "Show naïve", TW_TYPE_BOOLCPP, &g_bDrawNaive, "");
-	TwAddVarRW(g_pDUC->g_pTweakBar, "Show grid simulation", TW_TYPE_BOOLCPP, &g_bDrawGrid, "");
+	TwAddVarRW(g_pDUC->g_pTweakBar, "Radius", TW_TYPE_FLOAT, &g_iRadius, "step=0.001 min=0.02 max=0.05");
+	TwAddVarRW(g_pDUC->g_pTweakBar, "Mass", TW_TYPE_FLOAT, &g_iMass, "step=0.001 min=0.01 max=5.0");
 #ifdef ADAPTIVESTEP
 	TwAddVarRW(g_pDUC->g_pTweakBar, "Time Factor", TW_TYPE_FLOAT, &g_fTimeFactor, "step=0.01   min=0.01");
 #endif
@@ -263,6 +265,7 @@ void CALLBACK OnFrameMove( double dTime, float fElapsedTime, void* pUserContext 
 		g_pSimulator->initUI(g_pDUC);
 		g_iPreTestCase = g_iTestCase;
 	}
+	g_pSimulator->m_iKernelSpring = g_iKernel;
 	if (g_iPreMass != g_iMass) {
 		g_iPreMass = g_iMass;
 		g_pSimulator->changeMass(g_iMass);
